@@ -19,7 +19,7 @@ def index() -> rx.Component:
     return rx.flex(
         rx.container(   
             rx.heading(
-            'Kinch Leveling',
+            'Kinch',
             size='8',
             font_weight='bold',
             align='center',
