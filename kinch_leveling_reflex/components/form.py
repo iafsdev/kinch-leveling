@@ -11,6 +11,11 @@ def form() -> rx.Component:
           ),
           rx.input(placeholder='Avg100'),
           rx.input(placeholder='Avg1000'),
+          rx.select(
+            ['Nula', 'Baja', 'Media', 'Alta'],
+            width='100%',
+            placeholder='Seleccionar cantidad de mejora',
+          ),
           direction='column',
           spacing='2',
         )

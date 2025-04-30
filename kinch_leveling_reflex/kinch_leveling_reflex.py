@@ -4,7 +4,6 @@ import reflex as rx
 from kinch_leveling_reflex.components.table import table
 from kinch_leveling_reflex.components.modal import modal
 
-
 from rxconfig import config
 
 
