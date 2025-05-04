@@ -1,11 +1,12 @@
 import reflex as rx
+from kinch_leveling_reflex.states.FormState import FormState
 
 def form() -> rx.Component:
     return rx.flex(
       rx.form(
         rx.flex(
           rx.select(
-            ['SQ1', '2x2', '3x3'],
+            FormState.categories,
             width='100%',
             placeholder='Seleccionar categoría',
           ),

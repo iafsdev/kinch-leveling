@@ -3,7 +3,7 @@
 import reflex as rx
 from kinch_leveling_reflex.components.table import table
 from kinch_leveling_reflex.components.modal import modal
-
+from kinch_leveling_reflex.api.api import fastapi_app
 from rxconfig import config
 
 
@@ -38,5 +38,7 @@ def index() -> rx.Component:
         spacing='3',
     )
 
-app = rx.App()
+app = rx.App(
+    api_transformer=fastapi_app,
+)
 app.add_page(index)
