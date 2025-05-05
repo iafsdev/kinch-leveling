@@ -1,7 +1,8 @@
 import reflex as rx
 from kinch_leveling_reflex.api.SupabaseAPI import SupabaseAPI
 from fastapi import FastAPI
-from kinch_leveling_reflex.serializers import Category
+from kinch_leveling_reflex.serializers import Category, Time
+from kinch_leveling_reflex.utils import format_time
 
 fastapi_app = FastAPI()
 supabase = SupabaseAPI()
@@ -16,9 +17,15 @@ async def get_kaizen() -> dict[str, str]:
     kaizen = {}
     
     for time in data:
-        kaizen_calculation = round(time.actual_time * time.proportion, 3)
-        minutes = int(kaizen_calculation / 60)
-        seconds = round(kaizen_calculation - minutes * 60, 3)
-        kaizen[time.category] = f"{minutes}:{seconds:06.3f}" if minutes > 0 else f"{seconds:06.3f}"
+        if time.proportion == 0:
+            kaizen[time.category] = "00.000"
+        else:
+            kaizen_calculation = round(time.actual_time / time.proportion, 3)
+            kaizen[time.category] = format_time(kaizen_calculation)
     
     return kaizen
+
+@fastapi_app.get("/get_times")
+async def get_times() -> list[Time]:
+    return supabase.get_times()
+    
