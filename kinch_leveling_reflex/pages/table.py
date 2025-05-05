@@ -15,7 +15,7 @@ def table() -> rx.Component:
     ),
     rx.table.body(
       rx.foreach(
-        TableState.categories,
+        TableState.rows,
         row,
       ),
     ),

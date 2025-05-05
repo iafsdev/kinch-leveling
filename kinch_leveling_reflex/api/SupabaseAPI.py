@@ -1,7 +1,7 @@
 import os 
 from dotenv import load_dotenv
 from supabase import Client, create_client
-from kinch_leveling_reflex.serializers import Category
+from kinch_leveling_reflex.serializers import Category, Time
 
 load_dotenv()
 
@@ -27,3 +27,17 @@ class SupabaseAPI:
                 
         return data
         
+    def get_times(self) -> list[Time]:
+        response = self.supabase.table("times").select("categories(name), actual_time, goal_time, kaizen_proportion").execute()
+        data = []
+        
+        if len(response.data) > 0:
+            for time in response.data:                                      
+                data.append(Time(
+                    category=time['categories']['name'], 
+                    actual_time=float(time['actual_time']), 
+                    goal_time=float(time['goal_time']), 
+                    proportion=float(time['kaizen_proportion'])
+                ))
+            
+        return data

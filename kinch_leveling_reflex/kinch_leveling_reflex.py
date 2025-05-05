@@ -42,4 +42,4 @@ def index() -> rx.Component:
 app = rx.App(
     api_transformer=fastapi_app,
 )
-app.add_page(index, on_load=TableState.fetch_categories)
+app.add_page(index, on_load=TableState.load_data)
