@@ -1,6 +1,7 @@
 import reflex as rx
 
 class Category(rx.Base):
+  id: int
   name: str
   type: str
     

@@ -11,12 +11,6 @@ def modal() -> rx.Component:
           'Editar Tiempos',
         ),
         form(),
-        rx.flex(
-          rx.dialog.close(
-            rx.button('Guardar'),
-          ),
-          justify='center',
-        ),
         direction='column',
         spacing='3',
       )
