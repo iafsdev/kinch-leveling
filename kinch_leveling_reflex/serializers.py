@@ -15,5 +15,5 @@ class Row(rx.Base):
   pr_kinch: float
   nr_kinch: float
   wr_kinch: float
-  kaizen: float
+  kaizen: str
   

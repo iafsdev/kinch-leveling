@@ -4,7 +4,7 @@ from kinch_leveling_reflex.serializers import Category, Row
 
 class TableState(rx.State):
   categories: list[Category]    
-  kaizen: dict[str, float]
+  kaizen: dict[str, str]
   rows: list[Row]
   
   @rx.event

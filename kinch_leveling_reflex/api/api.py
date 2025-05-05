@@ -11,11 +11,14 @@ async def get_categories() -> list[Category]:
     return supabase.get_categories()
 
 @fastapi_app.get("/get_kaizen")
-async def get_kaizen() -> dict[str, float]:
+async def get_kaizen() -> dict[str, str]:
     data = supabase.get_times()
     kaizen = {}
     
     for time in data:
-        kaizen[time.category] = round(time.actual_time * time.proportion, 3)
+        kaizen_calculation = round(time.actual_time * time.proportion, 3)
+        minutes = int(kaizen_calculation / 60)
+        seconds = round(kaizen_calculation - minutes * 60, 3)
+        kaizen[time.category] = f"{minutes}:{seconds:06.3f}" if minutes > 0 else f"{seconds:06.3f}"
     
     return kaizen
