@@ -24,7 +24,6 @@ class SupabaseAPI:
         if len(response.data) > 0:
             for category in response.data:
                 data.append(Category(name=category['name'], type=category['type']['type']))
-        
-        print(data)
+                
         return data
         

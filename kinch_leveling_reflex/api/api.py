@@ -9,3 +9,6 @@ supabase = SupabaseAPI()
 @fastapi_app.get("/get_categories")
 async def get_categories() -> list[Category]:
     return supabase.get_categories()
+
+async def get_kaizen() -> list[str]:
+    pass

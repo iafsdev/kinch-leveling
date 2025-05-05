@@ -1,4 +1,6 @@
 import reflex as rx
+from kinch_leveling_reflex.states.TableState import TableState
+from kinch_leveling_reflex.components.row import row
 
 def table() -> rx.Component:
   return rx.table.root(
@@ -12,12 +14,9 @@ def table() -> rx.Component:
       ),
     ),
     rx.table.body(
-      rx.table.row(
-        rx.table.cell('SQ1'),
-        rx.table.cell('0.00'),
-        rx.table.cell('0.00'),
-        rx.table.cell('0.00'),
-        rx.table.cell('0.00'),
+      rx.foreach(
+        TableState.categories,
+        row,
       ),
     ),
     variant='surface',
