@@ -6,6 +6,7 @@ from kinch_leveling_reflex.pages.modal import modal
 from kinch_leveling_reflex.api.api import fastapi_app
 from rxconfig import config
 from kinch_leveling_reflex.states.TableState import TableState
+from kinch_leveling_reflex.states.HeaderState import HeaderState
 
 
 class State(rx.State):
@@ -26,7 +27,7 @@ def index() -> rx.Component:
             ),
         ),
         rx.flex(
-            rx.text('PR Kinch: 0.00'),
+            rx.text(f'PR Kinch: {HeaderState.pr_kinch}'),
             rx.text('NR Kinch: 0.00'),
             rx.text('WR Kinch: 0.00'),
             justify='center',
@@ -42,4 +43,4 @@ def index() -> rx.Component:
 app = rx.App(
     api_transformer=fastapi_app,
 )
-app.add_page(index, on_load=TableState.load_data)
+app.add_page(index, on_load=[TableState.load_data, HeaderState.load_data])

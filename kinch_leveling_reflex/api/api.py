@@ -40,4 +40,15 @@ async def update_time(category: str, actual_time: float, goal_time: float, propo
     
     return supabase.update_time(category_id, actual_time, goal_time, proportion)
 
+@fastapi_app.get("/get_prs")
+async def get_prs() -> dict[str, float]:
+    data = supabase.get_times()
+    prs = {}
     
+    for time in data:
+        if time.actual_time == 0:
+            prs[time.category] = 0
+        else:
+            prs[time.category] = round((time.goal_time * 100) / time.actual_time, 2)
+    
+    return prs

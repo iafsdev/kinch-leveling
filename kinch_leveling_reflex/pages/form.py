@@ -1,6 +1,7 @@
 import reflex as rx
 from kinch_leveling_reflex.states.FormState import FormState
 from kinch_leveling_reflex.states.TableState import TableState
+from kinch_leveling_reflex.states.HeaderState import HeaderState
 
 def form() -> rx.Component:
     return rx.flex(
@@ -26,7 +27,7 @@ def form() -> rx.Component:
               rx.button(
                 'Guardar',
                 type='submit',
-                on_click=[FormState.update_category_time, TableState.load_data],
+                on_click=[FormState.update_category_time, TableState.load_data, HeaderState.load_data],
               ),
             ),
             justify='center',
