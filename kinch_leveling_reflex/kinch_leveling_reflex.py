@@ -28,8 +28,8 @@ def index() -> rx.Component:
         ),
         rx.flex(
             rx.text(f'PR Kinch: {HeaderState.pr_kinch}'),
-            rx.text('NR Kinch: 0.00'),
-            rx.text('WR Kinch: 0.00'),
+            rx.text(f'NR Kinch: {HeaderState.nr_kinch}'),
+            rx.text(f'WR Kinch: {HeaderState.wr_kinch}'),
             justify='center',
             spacing='9',
         ),

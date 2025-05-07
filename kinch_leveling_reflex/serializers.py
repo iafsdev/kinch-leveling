@@ -18,3 +18,8 @@ class Row(rx.Base):
   wr_kinch: float
   kaizen: str
   
+class Record(rx.Base):
+  id: str
+  name: str
+  type: str
+  

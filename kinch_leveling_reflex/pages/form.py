@@ -13,8 +13,8 @@ def form() -> rx.Component:
             placeholder='Seleccionar categoría',
             on_change=FormState.get_category_times
           ),
-          rx.input(placeholder='Avg100', value=FormState.actual_time, on_change=FormState.set_actual_time),
-          rx.input(placeholder='Avg1000', value=FormState.goal_time, on_change=FormState.set_goal_time),
+          rx.input(placeholder='Tiempo actual', value=FormState.actual_time, on_change=FormState.set_actual_time),
+          rx.input(placeholder='Tiempo objetivo', value=FormState.goal_time, on_change=FormState.set_goal_time),
           rx.select(
             ['Nula', 'Baja', 'Media', 'Alta'],
             width='100%',
