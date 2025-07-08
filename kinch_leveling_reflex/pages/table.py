@@ -7,6 +7,7 @@ def table() -> rx.Component:
     rx.table.header(
       rx.table.row(
         rx.table.column_header_cell('Categoría'),
+        rx.table.column_header_cell('PB Kinch'),
         rx.table.column_header_cell('PR Kinch'),
         rx.table.column_header_cell('NR Kinch'),
         rx.table.column_header_cell('WR Kinch'),

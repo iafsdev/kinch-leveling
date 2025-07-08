@@ -13,6 +13,7 @@ class Time(rx.Base):
   
 class Row(rx.Base):
   category: str
+  pb_kinch: float
   pr_kinch: float
   nr_kinch: float
   wr_kinch: float

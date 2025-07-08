@@ -27,6 +27,7 @@ def index() -> rx.Component:
             ),
         ),
         rx.flex(
+            rx.text(f'PB Kinch: {HeaderState.pb_kinch}'),
             rx.text(f'PR Kinch: {HeaderState.pr_kinch}'),
             rx.text(f'NR Kinch: {HeaderState.nr_kinch}'),
             rx.text(f'WR Kinch: {HeaderState.wr_kinch}'),

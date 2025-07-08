@@ -46,3 +46,8 @@ class WcaAPI():
         result = response.json()['items'][0]['best']
         result = float(str(result)[:-2] + '.' + str(result)[-2:]) if result >= 100 else float('0.' + str(result))
         return result
+    
+    def get_pr_records(self, wca_id:str='2023SEGO03'):
+        response = requests.get(self.base_url + f"persons/{wca_id}.json")
+        result = response.json()['rank']
+        return result

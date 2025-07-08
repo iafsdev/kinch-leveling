@@ -42,18 +42,18 @@ async def update_time(category: str, actual_time: float, goal_time: float, propo
     
     return supabase.update_time(category_id, actual_time, goal_time, proportion)
 
-@fastapi_app.get("/get_prs")
-async def get_prs() -> dict[str, float]:
+@fastapi_app.get("/get_pbs")
+async def get_pbs() -> dict[str, float]:
     data = supabase.get_times()
-    prs = {}
+    pbs = {}
     
     for time in data:
         if time.actual_time == 0:
-            prs[time.category] = 0
+            pbs[time.category] = 0
         else:
-            prs[time.category] = round((time.goal_time * 100) / time.actual_time, 2)
+            pbs[time.category] = round((time.goal_time * 100) / time.actual_time, 2)
     
-    return prs
+    return pbs
 
 @fastapi_app.get("/get_wca_events")
 async def get_wca_events() -> list[Category]:
@@ -119,5 +119,34 @@ async def get_wr_kinch() -> dict[str, float]:
                     break
                 
     return wr_kinch
+
+async def get_pr_kinch() -> dict[str, float]:
+    wca_categories = await get_wca_events()
+    data = supabase.get_times()
+    pr_kinch = {}
+    prs = wca.get_pr_records()
+    
+    for time in data:
+        if time.actual_time == 0:
+            pr_kinch[time.category] = 0
+        else:
+            for wca_category in wca_categories:
+                if time.category == wca_category.name:
+                    pr_record = 0
+                    if wca_category.type == "Average/Single":
+                        average = next((s['best'] for s in prs['averages'] if s['eventId'] == wca_category.id), 0)
+                        average = float(str(average)[:-2] + '.' + str(average)[-2:]) if average >= 100 else float('0.' + str(average))
+                        single = next((s['best'] for s in prs['singles'] if s['eventId'] == wca_category.id), 0)
+                        single = float(str(single)[:-2] + '.' + str(single)[-2:]) if single >= 100 else float('0.' + str(single))
+                        kinch_average = round((average * 100) / time.actual_time, 2) if average != 0 else 0
+                        kinch_single = round((single * 100) / time.actual_time, 2) if single != 0 else 0
+                        pr_kinch[time.category] = kinch_average if kinch_average < kinch_single and kinch_average != 0 else kinch_single
+                    else:
+                        record = next((s['best'] for s in prs[wca_category.type.lower()+'s'] if s['eventId'] == wca_category.id), 0)
+                        record = float(str(record)[:-2] + '.' + str(record)[-2:]) if record >= 100 else float('0.' + str(record))
+                        pr_kinch[time.category] = round((record * 100) / time.actual_time, 2) if record != 0 else 0
+                    break
+                
+    return pr_kinch
             
         
