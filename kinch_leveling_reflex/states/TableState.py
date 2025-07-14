@@ -1,6 +1,7 @@
 import reflex as rx
-from kinch_leveling_reflex.api.api import get_categories, get_kaizen, get_pbs, get_pr_kinch, get_nr_kinch, get_wr_kinch
-from kinch_leveling_reflex.serializers import Category, Row
+from kinch_leveling_reflex.api.api import get_categories, get_kaizen, get_pbs, get_pr_kinch, get_wca_events
+from kinch_leveling_reflex.serializers import Category, Row, Record
+from kinch_leveling_reflex.states.WCAState import WCAState
 
 class TableState(rx.State):
   categories: list[Category]    
@@ -10,15 +11,18 @@ class TableState(rx.State):
   prs: dict[str, float]
   nrs: dict[str, float]
   wrs: dict[str, float]
+  wca_categories: list[Record]
   
   @rx.event
   async def load_data(self):
+    wca_state = await self.get_state(WCAState)
+    self.wca_categories = wca_state.wca_categories
     self.categories = await get_categories()
     self.kaizen = await get_kaizen()
     self.pbs = await get_pbs()
-    self.prs = await get_pr_kinch()
-    self.nrs = await get_nr_kinch()
-    self.wrs = await get_wr_kinch()
+    self.prs = await get_pr_kinch(self.wca_categories)
+    self.nrs = wca_state.nr_kinch
+    self.wrs = wca_state.wr_kinch
     self.rows = []
     for category in self.categories:
       self.rows.append(Row(

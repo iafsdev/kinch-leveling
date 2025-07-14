@@ -2,7 +2,7 @@ import reflex as rx
 from kinch_leveling_reflex.api.SupabaseAPI import SupabaseAPI
 from kinch_leveling_reflex.api.WcaAPI import WcaAPI
 from fastapi import FastAPI
-from kinch_leveling_reflex.serializers import Category, Time, Record
+from kinch_leveling_reflex.serializers import Category, Time, Record, WCARecord
 from kinch_leveling_reflex.utils import format_time
 
 fastapi_app = FastAPI()
@@ -56,7 +56,7 @@ async def get_pbs() -> dict[str, float]:
     return pbs
 
 @fastapi_app.get("/get_wca_events")
-async def get_wca_events() -> list[Category]:
+def get_wca_events() -> list[Record]:
     wca_categories = wca.get_events()
     supabase_categories = supabase.get_categories()
     
@@ -68,60 +68,69 @@ async def get_wca_events() -> list[Category]:
 
     return wca_categories
 
-@fastapi_app.get("/get_nr_kinch")
-async def get_nr_kinch() -> dict[str, float]:
-    wca_categories = await get_wca_events()
-    data = supabase.get_times()
-    nr_kinch = {}
+def get_nr_records(wca_categories: list[Category]) -> list[WCARecord]:
+    nr_records = []
     
-    for time in data:
-        if time.actual_time == 0:
-            nr_kinch[time.category] = 0
-        else:
-            for wca_category in wca_categories:
-                if time.category == wca_category.name:
-                    nr_record = 0
-                    if wca_category.type == "Average/Single":
-                        average = wca.get_nr_record(wca_category.id, "average")
-                        single = wca.get_nr_record(wca_category.id, "single")
-                        kinch_average = round((average * 100) / time.actual_time, 2)
-                        kinch_single = round((single * 100) / time.actual_time, 2)
-                        nr_kinch[time.category] = kinch_average if kinch_average < kinch_single else kinch_single
-                    else:
-                        record = wca.get_nr_record(wca_category.id, wca_category.type.lower())
-                        nr_kinch[time.category] = round((record * 100) / time.actual_time, 2)
-                    break
-                
-    return nr_kinch
-            
-@fastapi_app.get("/get_wr_kinch")
-async def get_wr_kinch() -> dict[str, float]:
-    wca_categories = await get_wca_events()
-    data = supabase.get_times()
-    wr_kinch = {}
-    
-    for time in data:
-        if time.actual_time == 0:
-            wr_kinch[time.category] = 0
-        else:
-            for wca_category in wca_categories:
-                if time.category == wca_category.name:
-                    wr_record = 0
-                    if wca_category.type == "Average/Single":
-                        average = wca.get_wr_record(wca_category.id, "average")
-                        single = wca.get_wr_record(wca_category.id, "single")
-                        kinch_average = round((average * 100) / time.actual_time, 2)
-                        kinch_single = round((single * 100) / time.actual_time, 2)
-                        wr_kinch[time.category] = kinch_average if kinch_average < kinch_single else kinch_single
-                    else:
-                        record = wca.get_wr_record(wca_category.id, wca_category.type.lower())
-                        wr_kinch[time.category] = round((record * 100) / time.actual_time, 2)
-                    break
-                
-    return wr_kinch
+    for wca_category in wca_categories:
+        average = wca.get_nr_record(wca_category.id, "average") if wca_category.name != "MBLD" else 0
+        single = wca.get_nr_record(wca_category.id, "single")
+        
+        nr_records.append(
+            WCARecord(
+                category=wca_category.name,
+                average=average,
+                single=single,
+                type=wca_category.type
+            )
+        )
+    return nr_records
 
-async def get_pr_kinch() -> dict[str, float]:
-    wca_categories = await get_wca_events()
+def get_wr_records(wca_categories: list[Category]) -> list[WCARecord]:
+    wr_records = []
+    
+    for wca_category in wca_categories:
+        average = wca.get_wr_record(wca_category.id, "average") if wca_category.name != "MBLD" else 0
+        single = wca.get_wr_record(wca_category.id, "single")
+        
+        wr_records.append(
+            WCARecord(
+                category=wca_category.name,
+                average=average,
+                single=single,
+                type=wca_category.type
+            )
+        )
+    return wr_records
+            
+@fastapi_app.get("/get_wca_kinch")
+def get_wca_kinch(records: list[WCARecord]) -> dict[str, float]:
+    data = supabase.get_times()
+    kinch = {}
+    
+    for time in data:
+        if time.actual_time == 0:
+            kinch[time.category] = 0
+        else:
+            for record in records:
+                if time.category == record.category:
+                    if record.type == "Average/Single":
+                        average = record.average
+                        single = record.single
+                        kinch_average = round((average * 100) / time.actual_time, 2)
+                        kinch_single = round((single * 100) / time.actual_time, 2)
+                        kinch[time.category] = kinch_average if kinch_average < kinch_single else kinch_single
+                    else:
+                        if record.type == "Average":
+                            average = record.average
+                            kinch[time.category] = round((average * 100) / time.actual_time, 2)
+                        elif record.type == "Single":
+                            single = record.single
+                            kinch[time.category] = round((single * 100) / time.actual_time, 2)
+                    break
+                
+    return kinch
+
+async def get_pr_kinch(wca_categories: list[Category]) -> dict[str, float]:
     data = supabase.get_times()
     pr_kinch = {}
     prs = wca.get_pr_records()

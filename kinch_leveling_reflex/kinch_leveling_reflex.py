@@ -7,7 +7,7 @@ from kinch_leveling_reflex.api.api import fastapi_app
 from rxconfig import config
 from kinch_leveling_reflex.states.TableState import TableState
 from kinch_leveling_reflex.states.HeaderState import HeaderState
-
+from kinch_leveling_reflex.states.WCAState import WCAState
 
 class State(rx.State):
     """The app state."""

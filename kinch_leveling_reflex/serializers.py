@@ -24,3 +24,8 @@ class Record(rx.Base):
   name: str
   type: str
   
+class WCARecord(rx.Base):
+  category: str
+  average: float
+  single: float
+  type: str
