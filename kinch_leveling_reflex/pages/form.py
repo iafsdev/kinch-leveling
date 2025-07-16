@@ -27,7 +27,7 @@ def form() -> rx.Component:
               rx.button(
                 'Guardar',
                 type='submit',
-                on_click=[FormState.update_category_time, TableState.load_data, HeaderState.load_data],
+                on_click=[FormState.update_category_time(TableState.kaizen, TableState.xp), TableState.load_data, HeaderState.load_data],
               ),
             ),
             justify='center',

@@ -16,6 +16,9 @@ class FormState(rx.State):
       1.00075: "Alta",
     }
     
+    positive_points = [0, 1, 2, 3]
+    negative_points = [0, -3, -2, -1]
+    
     async def fetch_categories(self):
       data = await get_categories()
       self.categories = [category.name for category in data]
@@ -33,16 +36,24 @@ class FormState(rx.State):
           break
         
     @rx.event
-    async def update_category_time(self):
+    async def update_category_time(self, kaizen: dict[str, str], xps: dict[str, int]):
+      print(kaizen[self.category])
+      kaizen_time = unformat_time(kaizen[self.category])
+      xp = xps[self.category]
       actual_time = unformat_time(self.actual_time)
       goal_time = unformat_time(self.goal_time)
       proportion_value = None
-      for key, value in self.prop_map.items():
+      proportion_index = 0  # Valor por defecto
+      for i, (key, value) in enumerate(self.prop_map.items()):
           if value == self.proportion:
               proportion_value = key
-              break
+              proportion_index = i
+              break      
+      xp += self.positive_points[proportion_index] if actual_time <= kaizen_time else self.negative_points[proportion_index]
+      xp = xp if xp >= 0 else 0
+      print(xp)
             
-      await update_time(self.category, actual_time, goal_time, proportion_value)
+      await update_time(self.category, actual_time, goal_time, proportion_value, xp)
       
       self.actual_time = ""
       self.goal_time = ""

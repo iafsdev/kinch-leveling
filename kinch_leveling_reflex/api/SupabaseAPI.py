@@ -43,11 +43,12 @@ class SupabaseAPI:
             
         return data
     
-    def update_time(self, category_id: int, actual_time: float, goal_time: float, proportion: float) -> bool:
+    def update_time(self, category_id: int, actual_time: float, goal_time: float, proportion: float, xp: int) -> bool:
         response = self.supabase.table("times").update({
             "actual_time": actual_time,
             "goal_time": goal_time,
-            "kaizen_proportion": proportion
+            "kaizen_proportion": proportion,
+            "xp": xp
         }).eq("category_id", category_id).execute()
         
         return True if len(response.data) > 0 else False

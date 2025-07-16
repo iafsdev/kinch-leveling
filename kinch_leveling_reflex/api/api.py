@@ -32,15 +32,15 @@ async def get_times() -> list[Time]:
     return supabase.get_times()
 
 @fastapi_app.patch("/update_time")
-async def update_time(category: str, actual_time: float, goal_time: float, proportion: float) -> bool:
+async def update_time(category: str, actual_time: float, goal_time: float, proportion: float, xp: int) -> bool:
     categories = supabase.get_categories()
     category_id = 0
     for item in categories:
         if item.name == category:
             category_id = item.id
             break
-    
-    return supabase.update_time(category_id, actual_time, goal_time, proportion)
+
+    return supabase.update_time(category_id, actual_time, goal_time, proportion, xp)
 
 @fastapi_app.get("/get_pbs")
 async def get_pbs() -> dict[str, float]:
