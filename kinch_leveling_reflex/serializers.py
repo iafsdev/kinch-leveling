@@ -10,6 +10,7 @@ class Time(rx.Base):
   actual_time: float
   goal_time: float
   proportion: float
+  xp: int
   
 class Row(rx.Base):
   category: str
@@ -18,6 +19,7 @@ class Row(rx.Base):
   nr_kinch: float
   wr_kinch: float
   kaizen: str
+  xp: int
   
 class Record(rx.Base):
   id: str

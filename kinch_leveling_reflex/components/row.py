@@ -9,4 +9,5 @@ def row(row: Row) -> rx.Component:
     rx.table.cell(row.nr_kinch),
     rx.table.cell(row.wr_kinch),
     rx.table.cell(row.kaizen),
+    rx.table.cell(row.xp)
   )

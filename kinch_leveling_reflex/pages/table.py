@@ -12,6 +12,7 @@ def table() -> rx.Component:
         rx.table.column_header_cell('NR Kinch'),
         rx.table.column_header_cell('WR Kinch'),
         rx.table.column_header_cell('Kaizen'),
+        rx.table.column_header_cell('XP')
       ),
     ),
     rx.table.body(

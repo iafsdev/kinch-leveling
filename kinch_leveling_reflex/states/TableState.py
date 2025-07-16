@@ -8,6 +8,7 @@ class TableState(rx.State):
   kaizen: dict[str, str]
   rows: list[Row]
   pbs: dict[str, float]
+  xp: dict[str, int]
   prs: dict[str, float]
   nrs: dict[str, float]
   wrs: dict[str, float]
@@ -19,7 +20,7 @@ class TableState(rx.State):
     self.wca_categories = wca_state.wca_categories
     self.categories = await get_categories()
     self.kaizen = await get_kaizen()
-    self.pbs = await get_pbs()
+    self.pbs, self.xp = await get_pbs()
     self.prs = await get_pr_kinch(self.wca_categories)
     self.nrs = wca_state.nr_kinch
     self.wrs = wca_state.wr_kinch
@@ -32,4 +33,5 @@ class TableState(rx.State):
         nr_kinch=self.nrs[category.name],
         wr_kinch=self.wrs[category.name],
         kaizen=self.kaizen[category.name],
+        xp=self.xp[category.name]
       ))

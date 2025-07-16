@@ -28,7 +28,7 @@ class SupabaseAPI:
         return data
         
     def get_times(self) -> list[Time]:
-        response = self.supabase.table("times").select("categories(name), actual_time, goal_time, kaizen_proportion").execute()
+        response = self.supabase.table("times").select("categories(name), actual_time, goal_time, kaizen_proportion, xp").execute()
         data = []
         
         if len(response.data) > 0:
@@ -37,7 +37,8 @@ class SupabaseAPI:
                     category=time['categories']['name'], 
                     actual_time=float(time['actual_time']), 
                     goal_time=float(time['goal_time']), 
-                    proportion=float(time['kaizen_proportion'])
+                    proportion=float(time['kaizen_proportion']),
+                    xp=int(time['xp'])
                 ))
             
         return data

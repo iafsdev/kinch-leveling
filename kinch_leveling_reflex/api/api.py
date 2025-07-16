@@ -46,14 +46,17 @@ async def update_time(category: str, actual_time: float, goal_time: float, propo
 async def get_pbs() -> dict[str, float]:
     data = supabase.get_times()
     pbs = {}
+    xp = {}
     
     for time in data:
         if time.actual_time == 0:
             pbs[time.category] = 0
         else:
             pbs[time.category] = round((time.goal_time * 100) / time.actual_time, 2)
+            
+        xp[time.category] = time.xp
     
-    return pbs
+    return pbs, xp
 
 @fastapi_app.get("/get_wca_events")
 def get_wca_events() -> list[Record]:

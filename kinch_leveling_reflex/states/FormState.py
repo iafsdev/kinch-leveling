@@ -29,6 +29,7 @@ class FormState(rx.State):
           self.actual_time = format_time(time.actual_time)
           self.goal_time = format_time(time.goal_time)
           self.proportion = self.prop_map[time.proportion]
+          print(self.proportion)
           break
         
     @rx.event

@@ -8,13 +8,14 @@ class HeaderState(rx.State):
   pr_kinch: float
   nr_kinch: float
   wr_kinch: float
+  xp_total: int
   wca_categories: list[Record]  
   
   @rx.event
   async def load_data(self):
     wca_state = await self.get_state(WCAState)
     self.wca_categories = wca_state.wca_categories
-    pbs = await get_pbs()
+    pbs, xp_scores = await get_pbs()
     prs = await get_pr_kinch(self.wca_categories)
     nrs = wca_state.nr_kinch
     wrs = wca_state.wr_kinch
@@ -23,6 +24,7 @@ class HeaderState(rx.State):
     pr_sum = 0
     nr_sum = 0
     wr_sum = 0
+    xp_sum = 0
     
     for pb in pbs.values():
       pb_sum += pb
@@ -35,8 +37,12 @@ class HeaderState(rx.State):
       
     for wr in wrs.values():
       wr_sum += wr
+      
+    for xp in xp_scores.values():
+      xp_sum += xp
     
     self.pb_kinch = round(pb_sum / len(pbs), 2)
     self.pr_kinch = round(pr_sum / len(prs), 2)
     self.nr_kinch = round(nr_sum / len(nrs), 2)
     self.wr_kinch = round(wr_sum / len(wrs), 2)
+    self.xp_total = xp_sum
