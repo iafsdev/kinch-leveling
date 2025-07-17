@@ -5,4 +5,8 @@ from rxconfig import config
 
 app = rx.App(
     api_transformer=fastapi_app,
+    theme=rx.theme(
+        appearance="dark",
+        accent_color="iris"
+    )
 )

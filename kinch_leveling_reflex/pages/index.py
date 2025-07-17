@@ -1,4 +1,5 @@
 import reflex as rx
+from kinch_leveling_reflex.components.header import header
 from kinch_leveling_reflex.components.table import table
 from kinch_leveling_reflex.components.modal import modal
 from kinch_leveling_reflex.states.TableState import TableState
@@ -8,14 +9,7 @@ from kinch_leveling_reflex.states.HeaderState import HeaderState
 def index() -> rx.Component:
     # Welcome Page (Index)
     return rx.flex(
-        rx.container(   
-            rx.heading(
-            'Kinch Leveling',
-            size='8',
-            font_weight='bold',
-            align='center',
-            ),
-        ),
+        header(),
         rx.flex(
             rx.text(f'PB Kinch: {HeaderState.pb_kinch}'),
             rx.text(f'PR Kinch: {HeaderState.pr_kinch}'),
