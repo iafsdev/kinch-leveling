@@ -8,6 +8,7 @@ class FormState(rx.State):
     actual_time: str
     goal_time: str
     proportion: str
+    original_proportion: str
     
     prop_map = {
       0: "Nula",
@@ -32,6 +33,7 @@ class FormState(rx.State):
           self.actual_time = format_time(time.actual_time)
           self.goal_time = format_time(time.goal_time)
           self.proportion = self.prop_map[time.proportion]
+          self.original_proportion = self.prop_map[time.proportion]
           print(self.proportion)
           break
         
@@ -47,6 +49,7 @@ class FormState(rx.State):
       for i, (key, value) in enumerate(self.prop_map.items()):
           if value == self.proportion:
               proportion_value = key
+          if value == self.original_proportion:
               proportion_index = i
               break      
       xp += self.positive_points[proportion_index] if actual_time <= kaizen_time else self.negative_points[proportion_index]
