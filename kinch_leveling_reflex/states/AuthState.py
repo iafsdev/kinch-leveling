@@ -10,13 +10,17 @@ class AuthState(rx.State):
   REDIRECT_URI: str = "http://localhost:3000/auth/"
   TOKEN_URL: str = "https://www.worldcubeassociation.org/oauth/token"
   ME_URL: str = "https://www.worldcubeassociation.org/api/v0/me"
-  isLogin: bool = False
   code: str
-  token: str
-  wca_id: str
+  token: str = rx.Cookie(max_age=172800)  
+  wca_id: str = rx.Cookie(max_age=172800)
+  
+  @rx.var
+  def isLogin(self) -> bool:
+    return True if self.wca_id else False
   
   @rx.event
   def callback(self):
+    print('token:', self.token)
     url = self.router.url
     self.code = url.split("code=")[-1] if "code=" in url else ""
     data = {
@@ -27,6 +31,7 @@ class AuthState(rx.State):
       'redirect_uri': self.REDIRECT_URI
     }
     token_response = requests.post(self.TOKEN_URL, data=data)
+    print(token_response.json())
     if token_response.status_code == 200:
       self.isLogin = True
       self.token = token_response.json().get('access_token')
@@ -42,6 +47,5 @@ class AuthState(rx.State):
   @rx.event
   def logout(self):
     self.isLogin = False
-    self.token = ""
-    self.wca_id = ""
+    self.wca_id = ''
     return rx.redirect('/')
