@@ -26,11 +26,7 @@ def header() -> rx.Component:
                     rx.menu.separator(),
                     rx.menu.item(
                         rx.cond(AuthState.isLogin, "Log out", "Log in"),
-                        on_click=rx.cond(
-                            AuthState.isLogin,
-                            AuthState.logout,
-                            rx.redirect('https://www.worldcubeassociation.org/oauth/authorize?client_id=VBetj_Bft05DLM40sQTY3EGpjv0N1IUYFMUL7TvGGIo&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fauth%2F&response_type=code&scope=public')    
-                        ),
+                        on_click=AuthState.login
                     ),
                 ),
                 justify="end",

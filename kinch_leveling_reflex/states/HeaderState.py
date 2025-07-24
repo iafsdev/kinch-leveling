@@ -2,6 +2,7 @@ import reflex as rx
 from kinch_leveling_reflex.api.api import get_pbs, get_pr_kinch, get_wca_events
 from kinch_leveling_reflex.serializers import Category, Record
 from kinch_leveling_reflex.states.WCAState import WCAState
+from kinch_leveling_reflex.states.AuthState import AuthState
 
 class HeaderState(rx.State):
   pb_kinch: float
@@ -10,15 +11,19 @@ class HeaderState(rx.State):
   wr_kinch: float
   xp_total: int
   wca_categories: list[Record]  
+  wca_id: str
   
   @rx.event
   async def load_data(self):
     wca_state = await self.get_state(WCAState)
     self.wca_categories = wca_state.wca_categories
-    pbs, xp_scores = await get_pbs()
-    prs = await get_pr_kinch(self.wca_categories)
-    nrs = wca_state.nr_kinch
-    wrs = wca_state.wr_kinch
+    auth_state = await self.get_state(AuthState)
+    self.wca_id = auth_state.wca_id
+
+    pbs, xp_scores = await get_pbs(self.wca_id)
+    prs = await get_pr_kinch(self.wca_categories, self.wca_id)
+    nrs = await wca_state.nr_kinch
+    wrs = await wca_state.wr_kinch
     
     pb_sum = 0
     pr_sum = 0

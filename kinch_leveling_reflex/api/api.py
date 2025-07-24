@@ -14,8 +14,8 @@ async def get_categories() -> list[Category]:
     return supabase.get_categories()
 
 @fastapi_app.get("/get_kaizen")
-async def get_kaizen() -> dict[str, str]:
-    data = supabase.get_times()
+async def get_kaizen(wca_id: str) -> dict[str, str]:
+    data = supabase.get_times(wca_id)
     kaizen = {}
     
     for time in data:
@@ -28,8 +28,8 @@ async def get_kaizen() -> dict[str, str]:
     return kaizen
 
 @fastapi_app.get("/get_times")
-async def get_times() -> list[Time]:
-    return supabase.get_times()
+async def get_times(wca_id: str) -> list[Time]:
+    return supabase.get_times(wca_id)
 
 @fastapi_app.patch("/update_time")
 async def update_time(category: str, actual_time: float, goal_time: float, proportion: float, xp: int) -> bool:
@@ -43,8 +43,8 @@ async def update_time(category: str, actual_time: float, goal_time: float, propo
     return supabase.update_time(category_id, actual_time, goal_time, proportion, xp)
 
 @fastapi_app.get("/get_pbs")
-async def get_pbs() -> dict[str, float]:
-    data = supabase.get_times()
+async def get_pbs(wca_id: str) -> dict[str, float]:
+    data = supabase.get_times(wca_id)
     pbs = {}
     xp = {}
     
@@ -106,8 +106,8 @@ def get_wr_records(wca_categories: list[Category]) -> list[WCARecord]:
     return wr_records
             
 @fastapi_app.get("/get_wca_kinch")
-def get_wca_kinch(records: list[WCARecord]) -> dict[str, float]:
-    data = supabase.get_times()
+def get_wca_kinch(records: list[WCARecord], wca_id: str) -> dict[str, float]:
+    data = supabase.get_times(wca_id)
     kinch = {}
     
     for time in data:
@@ -133,8 +133,8 @@ def get_wca_kinch(records: list[WCARecord]) -> dict[str, float]:
                 
     return kinch
 
-async def get_pr_kinch(wca_categories: list[Category]) -> dict[str, float]:
-    data = supabase.get_times()
+async def get_pr_kinch(wca_categories: list[Category], wca_id: str) -> dict[str, float]:
+    data = supabase.get_times(wca_id)
     pr_kinch = {}
     prs = wca.get_pr_records()
     

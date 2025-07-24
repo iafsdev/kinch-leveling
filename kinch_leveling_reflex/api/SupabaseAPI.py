@@ -27,8 +27,8 @@ class SupabaseAPI:
                 
         return data
         
-    def get_times(self) -> list[Time]:
-        response = self.supabase.table("times").select("categories(name), actual_time, goal_time, kaizen_proportion, xp").execute()
+    def get_times(self, wca_id: str) -> list[Time]:
+        response = self.supabase.table("times").select("categories(name), actual_time, goal_time, kaizen_proportion, xp").eq("user_id", wca_id).execute()
         data = []
         
         if len(response.data) > 0:
@@ -43,7 +43,7 @@ class SupabaseAPI:
             
         return data
     
-    def update_time(self, category_id: int, actual_time: float, goal_time: float, proportion: float, xp: int) -> bool:
+    def update_time(self, category_id: int, actual_time: float,  goal_time: float, proportion: float, xp: int) -> bool:
         response = self.supabase.table("times").update({
             "actual_time": actual_time,
             "goal_time": goal_time,
