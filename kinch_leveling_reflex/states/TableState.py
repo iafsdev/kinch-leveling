@@ -23,7 +23,6 @@ class TableState(rx.State):
     auth_state = await self.get_state(AuthState)
     self.wca_id = auth_state.wca_id
 
-
     self.categories = await get_categories()
     self.kaizen = await get_kaizen(self.wca_id)
     self.pbs, self.xp = await get_pbs(self.wca_id)
@@ -31,13 +30,14 @@ class TableState(rx.State):
     self.nrs = await wca_state.nr_kinch
     self.wrs = await wca_state.wr_kinch
     self.rows = []
-    for category in self.categories:
-      self.rows.append(Row(
-        category=category.name,
-        pb_kinch=self.pbs[category.name],
-        pr_kinch=self.prs[category.name],
-        nr_kinch=self.nrs[category.name],
-        wr_kinch=self.wrs[category.name],
-        kaizen=self.kaizen[category.name],
-        xp=self.xp[category.name]
-      ))
+    if self.wca_id:
+      for category in self.categories:
+        self.rows.append(Row(
+          category=category.name,
+          pb_kinch=self.pbs[category.name],
+          pr_kinch=self.prs[category.name],
+          nr_kinch=self.nrs[category.name],
+          wr_kinch=self.wrs[category.name],
+          kaizen=self.kaizen[category.name],
+          xp=self.xp[category.name]
+        ))

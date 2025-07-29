@@ -46,8 +46,9 @@ class HeaderState(rx.State):
     for xp in xp_scores.values():
       xp_sum += xp
     
-    self.pb_kinch = round(pb_sum / len(pbs), 2)
-    self.pr_kinch = round(pr_sum / len(prs), 2)
-    self.nr_kinch = round(nr_sum / len(nrs), 2)
-    self.wr_kinch = round(wr_sum / len(wrs), 2)
-    self.xp_total = xp_sum
+    if self.wca_id:
+      self.pb_kinch = round(pb_sum / len(pbs), 2)
+      self.pr_kinch = round(pr_sum / len(prs), 2)
+      self.nr_kinch = round(nr_sum / len(nrs), 2)
+      self.wr_kinch = round(wr_sum / len(wrs), 2)
+      self.xp_total = xp_sum
