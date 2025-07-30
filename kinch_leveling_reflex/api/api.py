@@ -161,4 +161,22 @@ async def get_pr_kinch(wca_categories: list[Category], wca_id: str) -> dict[str,
                 
     return pr_kinch
             
+def create_new_profile(wca_id: str) -> bool:
+    insertions = []
+    
+    for i in range(1,18):
+        insertions.append({
+            "user_id": wca_id,
+            'actual_time': 0,
+            'goal_time': 0,
+            'kaizen_proportion': 0,
+            'category_id': i,
+            'xp': 0
+        })
         
+    print('insertando')
+
+    return supabase.new_profile(insertions)
+
+def check_profile(wca_id: str) -> bool:
+    return supabase.check_profile(wca_id)

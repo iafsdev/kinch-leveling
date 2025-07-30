@@ -2,6 +2,7 @@ import reflex as rx
 import requests
 import os
 from dotenv import load_dotenv
+from kinch_leveling_reflex.api.api import create_new_profile, check_profile
 
 class AuthState(rx.State):
   load_dotenv()
@@ -42,6 +43,9 @@ class AuthState(rx.State):
       me_response = requests.get(self.ME_URL, headers=headers)
       if me_response.status_code == 200:
         self.wca_id = me_response.json().get('me')['wca_id']
+
+        if not check_profile(self.wca_id):
+          create_new_profile(self.wca_id)
         
     return rx.redirect('/')
   

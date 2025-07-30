@@ -52,3 +52,11 @@ class SupabaseAPI:
         }).eq("category_id", category_id).execute()
         
         return True if len(response.data) > 0 else False
+
+    def new_profile(self, insertions: list[dict]) -> bool:
+        response = self.supabase.table("times").insert(insertions).execute()
+        return True if len(response.data) > 0 else False
+    
+    def check_profile(self, wca_id: str) -> bool:
+        response = self.supabase.table("times").select("id").eq("user_id", wca_id).execute()
+        return True if len(response.data) > 0 else False
