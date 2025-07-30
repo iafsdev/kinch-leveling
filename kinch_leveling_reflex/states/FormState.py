@@ -57,7 +57,7 @@ class FormState(rx.State):
       xp += self.positive_points[proportion_index] if actual_time <= kaizen_time else self.negative_points[proportion_index]
       xp = xp if xp >= 0 else 0
             
-      await update_time(self.category, actual_time, goal_time, proportion_value, xp)
+      await update_time(self.category, actual_time, goal_time, proportion_value, xp, self.wca_id)
       
       self.actual_time = ""
       self.goal_time = ""
