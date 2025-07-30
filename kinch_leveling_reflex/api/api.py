@@ -173,8 +173,6 @@ def create_new_profile(wca_id: str) -> bool:
             'category_id': i,
             'xp': 0
         })
-        
-    print('insertando')
 
     return supabase.new_profile(insertions)
 

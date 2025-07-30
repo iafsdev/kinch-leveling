@@ -53,8 +53,7 @@ class FormState(rx.State):
           if value == self.proportion:
               proportion_value = key
           if value == self.original_proportion:
-              proportion_index = i
-              break      
+              proportion_index = i     
       xp += self.positive_points[proportion_index] if actual_time <= kaizen_time else self.negative_points[proportion_index]
       xp = xp if xp >= 0 else 0
             
