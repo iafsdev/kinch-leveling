@@ -10,5 +10,3 @@ def unformat_time(time_str: str) -> float:
         return float(minutes) * 60 + float(seconds)
     else:
         return float(split_time[0])
-    
-    
