@@ -1,6 +1,7 @@
 import reflex as rx
 from kinch_leveling_reflex.api.SupabaseAPI import SupabaseAPI
 from kinch_leveling_reflex.api.WcaAPI import WcaAPI
+from kinch_leveling_reflex.api.TnoodleAPI import TnoodleAPI
 from fastapi import FastAPI
 from kinch_leveling_reflex.serializers import Category, Time, Record, WCARecord
 from kinch_leveling_reflex.utils import format_time
@@ -8,6 +9,7 @@ from kinch_leveling_reflex.utils import format_time
 fastapi_app = FastAPI()
 supabase = SupabaseAPI()
 wca = WcaAPI()
+tnoodle = TnoodleAPI()
 
 @fastapi_app.get("/get_categories")
 async def get_categories() -> list[Category]:
@@ -178,3 +180,6 @@ def create_new_profile(wca_id: str) -> bool:
 
 def check_profile(wca_id: str) -> bool:
     return supabase.check_profile(wca_id)
+
+def get_scramble(category:str) -> str:
+    return tnoodle.get_scramble(category)
