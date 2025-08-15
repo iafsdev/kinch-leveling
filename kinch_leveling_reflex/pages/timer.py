@@ -16,11 +16,20 @@ def timer() -> rx.Component:
       TimerState.categories,
       width='20%',
       placeholder='Seleccionar categoría',
+      value=TimerState.category,
       on_change=TimerState.get_scramble
     ),
     rx.heading(TimerState.formatted_time, size='9'),
-    rx.text(TimerState.scramble),
-    # rx.image(src='/scramble.svg'),
+    rx.text(
+      TimerState.scramble,
+      width='80%',
+      align='center',
+    ),
+    rx.center(
+      rx.html(TimerState.svg_scramble, width='100%', height='100%'),
+      height='20vh',
+      width='20vh'
+    ),
     direction='column',
     align_items='center',
     justify_content='center',

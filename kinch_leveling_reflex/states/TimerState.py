@@ -11,8 +11,9 @@ class TimerState(rx.State):
     init_time: float
     toggle_guard: int = 2  # Nueva variable de control
     scramble: str
-    category: str
+    category: str = '3x3'
     id_category: str = '333'
+    svg_scramble: str
 
     categories_map: dict[str, str] = {
         "2x2": "222",
@@ -55,14 +56,14 @@ class TimerState(rx.State):
             if self.is_running:
                 self.is_running = False
                 self.toggle_guard = 0  # Prepara para el siguiente ciclo
-                self.scramble = get_scramble(self.id_category)
+                self.get_scramble(self.category)
         self.toggle_guard += 1
         
     @rx.event
     def get_scramble(self, category:str):
         self.category = category
         self.id_category = self.categories_map[category]
-        self.scramble = get_scramble(self.id_category)
+        self.scramble, self.svg_scramble = get_scramble(self.id_category)
 
     @rx.event(background=True)
     async def increment(self):

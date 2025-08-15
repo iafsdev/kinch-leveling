@@ -181,5 +181,5 @@ def create_new_profile(wca_id: str) -> bool:
 def check_profile(wca_id: str) -> bool:
     return supabase.check_profile(wca_id)
 
-def get_scramble(category:str) -> str:
+def get_scramble(category:str) -> tuple[str, str]:
     return tnoodle.get_scramble(category)
