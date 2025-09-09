@@ -1,6 +1,6 @@
 import reflex as rx
-from kinch_leveling_reflex.api.api import get_categories, get_kaizen, get_pbs, get_pr_kinch, get_wca_events
-from kinch_leveling_reflex.serializers import Category, Row, Record
+from kinch_leveling_reflex.api.api import get_categories, get_kaizen, get_pbs, get_pr_kinch, get_wca_kinch
+from kinch_leveling_reflex.serializers import Category, Row, Record, WCARecord
 from kinch_leveling_reflex.states.WCAState import WCAState
 from kinch_leveling_reflex.states.AuthState import AuthState
 
@@ -10,6 +10,8 @@ class TableState(rx.State):
   rows: list[Row]
   pbs: dict[str, float]
   xp: dict[str, int]
+  nr_records: list[WCARecord]
+  wr_records: list[WCARecord]
   prs: dict[str, float]
   nrs: dict[str, float]
   wrs: dict[str, float]
@@ -27,8 +29,10 @@ class TableState(rx.State):
     self.kaizen = await get_kaizen(self.wca_id)
     self.pbs, self.xp = await get_pbs(self.wca_id)
     self.prs = await get_pr_kinch(self.wca_categories, self.wca_id)
-    self.nrs = await wca_state.nr_kinch
-    self.wrs = await wca_state.wr_kinch
+    self.nr_records = wca_state.nr_records
+    self.wr_records = wca_state.wr_records
+    self.nrs = get_wca_kinch(self.nr_records, self.wca_id)
+    self.wrs = get_wca_kinch(self.wr_records, self.wca_id)
     self.rows = []
     if self.wca_id:
       for category in self.categories:

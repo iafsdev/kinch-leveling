@@ -1,5 +1,5 @@
 import reflex as rx
-from kinch_leveling_reflex.api.api import get_pbs, get_pr_kinch, get_wca_events
+from kinch_leveling_reflex.api.api import get_pbs, get_pr_kinch, get_wca_kinch
 from kinch_leveling_reflex.serializers import Category, Record
 from kinch_leveling_reflex.states.WCAState import WCAState
 from kinch_leveling_reflex.states.AuthState import AuthState
@@ -22,9 +22,11 @@ class HeaderState(rx.State):
 
     pbs, xp_scores = await get_pbs(self.wca_id)
     prs = await get_pr_kinch(self.wca_categories, self.wca_id)
-    nrs = await wca_state.nr_kinch
-    wrs = await wca_state.wr_kinch
-    
+    nr_records = wca_state.nr_records
+    wr_records = wca_state.wr_records
+    nrs = get_wca_kinch(nr_records, self.wca_id)
+    wrs = get_wca_kinch(wr_records, self.wca_id)
+
     pb_sum = 0
     pr_sum = 0
     nr_sum = 0

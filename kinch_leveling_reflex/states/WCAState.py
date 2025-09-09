@@ -16,15 +16,3 @@ class WCAState(rx.State):
   @rx.var(cache=True)
   def nr_records(self) -> list[WCARecord]:
     return get_nr_records(self.wca_categories)
-  
-  @rx.var
-  async def wr_kinch(self) -> dict[str, float]:
-    auth_state = await self.get_state(AuthState)
-    wca_id = auth_state.wca_id
-    return get_wca_kinch(self.wr_records, wca_id)
-
-  @rx.var
-  async def nr_kinch(self) -> dict[str, float]:
-    auth_state = await self.get_state(AuthState)
-    wca_id = auth_state.wca_id
-    return get_wca_kinch(self.nr_records, wca_id)
