@@ -1,6 +1,6 @@
 import reflex as rx
 from kinch_leveling_reflex.api.api import get_categories, get_times, update_time
-from kinch_leveling_reflex.utils import format_time, unformat_time
+from kinch_leveling_reflex.utils import format_time, unformat_time, decode_mbld_result, encode_mbld_result
 from kinch_leveling_reflex.states.AuthState import AuthState
 
 class FormState(rx.State):
@@ -35,8 +35,12 @@ class FormState(rx.State):
       data = await get_times(self.wca_id)
       for time in data:
         if time.category == category:
-          self.actual_time = format_time(time.actual_time)
-          self.goal_time = format_time(time.goal_time)
+          if self.category == 'MBLD':
+            self.actual_time = decode_mbld_result(time.actual_time)
+            self.goal_time = decode_mbld_result(time.goal_time)
+          else:
+            self.actual_time = format_time(time.actual_time)
+            self.goal_time = format_time(time.goal_time)
           self.proportion = self.prop_map[time.proportion]
           self.original_proportion = self.prop_map[time.proportion]
           break
@@ -45,8 +49,12 @@ class FormState(rx.State):
     async def update_category_time(self, kaizen: dict[str, str], xps: dict[str, int]):
       kaizen_time = unformat_time(kaizen[self.category])
       xp = xps[self.category]
-      actual_time = unformat_time(self.actual_time)
-      goal_time = unformat_time(self.goal_time)
+      if self.category == 'MBLD':
+        actual_time = encode_mbld_result(self.actual_time)
+        goal_time = encode_mbld_result(self.goal_time)
+      else:
+        actual_time = unformat_time(self.actual_time)
+        goal_time = unformat_time(self.goal_time)
       proportion_value = None
       proportion_index = 0  # Valor por defecto
       for i, (key, value) in enumerate(self.prop_map.items()):

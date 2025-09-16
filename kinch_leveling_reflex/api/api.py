@@ -4,7 +4,7 @@ from kinch_leveling_reflex.api.WcaAPI import WcaAPI
 from kinch_leveling_reflex.api.TnoodleAPI import TnoodleAPI
 from fastapi import FastAPI
 from kinch_leveling_reflex.serializers import Category, Time, Record, WCARecord
-from kinch_leveling_reflex.utils import format_time
+from kinch_leveling_reflex.utils import format_time, decode_mbld_result, convert_mbld_kinch, kinch_to_mbld_text
 
 fastapi_app = FastAPI()
 supabase = SupabaseAPI()
@@ -24,8 +24,14 @@ async def get_kaizen(wca_id: str) -> dict[str, str]:
         if time.proportion == 0:
             kaizen[time.category] = "00.000"
         else:
-            kaizen_calculation = round(time.actual_time / time.proportion, 3)
-            kaizen[time.category] = format_time(kaizen_calculation)
+            if time.category == 'MBLD':
+                actual_time = decode_mbld_result(time.actual_time)
+                actual_time = convert_mbld_kinch(actual_time)
+                kaizen_calculation = round(actual_time * time.proportion, 3)
+                kaizen[time.category] = kinch_to_mbld_text(kaizen_calculation)
+            else:
+                kaizen_calculation = round(time.actual_time / time.proportion, 3)
+                kaizen[time.category] = format_time(kaizen_calculation)
     
     return kaizen
 
@@ -54,7 +60,14 @@ async def get_pbs(wca_id: str) -> dict[str, float]:
         if time.actual_time == 0:
             pbs[time.category] = 0
         else:
-            pbs[time.category] = round((time.goal_time * 100) / time.actual_time, 2)
+            if time.category == 'MBLD':
+                time.goal_time = decode_mbld_result(time.goal_time)
+                time.goal_time = convert_mbld_kinch(time.goal_time)
+                time.actual_time = decode_mbld_result(time.actual_time)
+                time.actual_time = convert_mbld_kinch(time.actual_time)
+                pbs[time.category] = round((time.actual_time * 100) / time.goal_time, 2)
+            else:
+                pbs[time.category] = round((time.goal_time * 100) / time.actual_time, 2)
             
         xp[time.category] = time.xp
     
@@ -130,7 +143,14 @@ def get_wca_kinch(records: list[WCARecord], wca_id: str) -> dict[str, float]:
                             kinch[time.category] = round((average * 100) / time.actual_time, 2)
                         elif record.type == "Single":
                             single = record.single
-                            kinch[time.category] = round((single * 100) / time.actual_time, 2)
+                            if record.category == 'MBLD':
+                                single = decode_mbld_result(single)
+                                single = convert_mbld_kinch(single)
+                                actual_time = decode_mbld_result(time.actual_time)
+                                actual_time = convert_mbld_kinch(actual_time)
+                                kinch[time.category] = round((actual_time * 100) / single, 2)
+                            else:
+                                kinch[time.category] = round((single * 100) / time.actual_time, 2)
                     break
                 
     return kinch
